@@ -1,0 +1,330 @@
+title: 目录 - Index
+
+* 面向对象的基本概念
+* 面向对象的三个基本特征
+* Javascript 面向对象
+    * 对象封装
+    * 继承的实现
+    * 多态
+* 实例讲解 (PADMAIL项目UI组件设计与实现)
+
+---
+
+title: 面向对象的基本概念
+
+* 面向对象的英文全称叫做Object Oriented，简称OO。OO其实包括OOA(Object Oriented
+  Analysis，面向对象分析)、OOD(Object Oriented Design，面向对象设计)和OOP(Object
+  Oriented Programming，面向对象的程序设计)。
+
+* 通常所说的面向对象是指OOP, OOP是一种围绕真实世界的概念来组织模型的程序设计方法，它
+  采用对象来描述问题空间的实体。在使用计算机解决问题时，**对象是作为计算机模拟真实世界
+  的一个抽象，一个对象就是一个物理实体或逻辑实体，它反映了系统为之保存信息和（或）与
+  它交互的能力**。使其具有自己的属性和行为, 从而简化对复杂事物的描述，更有利于工程的可
+  维护性和扩展性。
+
+* OOP同结构化程序设计相比最大的区别就在于: 前者首先关心的是所要处理的数据，而后者首先
+  关心的是功能。
+
+---
+
+title: 面向对象三个基本特征
+
+<ul class="build fade" style="line-height:1.3em;font-size:0.87em;">
+    <li>封装 (Encapsulation) 将数据以及相关的操作组织在一起，成为独立的构件。
+        外部无法直接访问这些封装了的数据，从而保证了这些数据的正确性。
+        封装的目的是为了<strong>内部数据表现形式和实现细节的隐藏</strong>，信息隐藏是为了减少系统各部分间的依
+        赖性,各部分间必须通过明确的通道传送信息,也就是对象间的接口.这样一来,隐藏了部分内部的
+        细节,极大方便系统的开发,维护和扩展。
+    </li>
+    <li>继承 (Inheritance) 继承是一种联结类的层次模型，并且允许和鼓励类的重用，它<strong>提供了一种明确表述共性的方法</strong>。
+        一个新类可以从现有的类中派生，这个过程称为类的继承。新类继承了原始类的特性，
+        新类称为原始类的派生类（子类），而原始类称为新类的基类（父类）。<strong>派生类可以从它的
+        基类那里继承方法和实例变量</strong>，并且派生类可以修改或增加新的方法使之更适合特殊的需求。
+        继承性很好地解决了软件的可重用性问题。
+    </li>
+    <li>多态 (Polymorphism) 多态是允许你将父对象设置成为和一个或更多的他的子对象相等的技术，赋值之后，父对象就可
+        以根据当前赋值给它的子对象的特性以不同的方式运作。简单的说，就是允许类与类之间相
+        同方法名的指针得以调用, 这样很好地<strong>解决了应用程序函数同名问题</strong>。实现多态，有二种方
+        式，覆盖，重载。
+    </li>
+</ul>
+
+---
+
+title: Javascript 面向对象
+
+javascript 本身是一种基于对象(object-based)的语言，我们日常编码过程中用到的所有东西几
+乎都是对象(Number,String,Boolean, etc,.)。但是，相对于一些流行的面向对象语言
+(C++,C#,java)，它又不是一种真正的面向对象编程(OOP)语言，因为它的语法中没有class的概念。
+
+Keyword: class, object, `this`, closure, constructor, prototype
+
+<ul class="build">
+    <li><strong>几种对象封装的方法</strong></li>
+    <li><strong>继承</strong></li>
+    <li><strong>多态体现</strong></li>
+</ul>
+
+---
+
+title: Javascript 面向对象
+article_class: smaller
+subtitle: 对象封装 - 原始模式
+
+假定我们把猫看成一个对象，它有"name"和"color"两个属性, "etc" 行为。
+<pre class="prettyprint" data-lang="javascript">
+var Cat = {
+    name: ''
+    color: '',
+    eat: function() {}
+};
+</pre>
+
+<div class="build">
+<p>现在，我们需要根据这个原型对象的规格（schema），生成两个实例对象。</p>
+<pre class="prettyprint" data-lang="javascript">
+function eat() {
+    console.log('I\'m eta fish');
+}
+var cat1 = {name: 'Kitty', color: 'white', eat: eat};
+var cat1 = {name: 'Smokey', color: 'black', eat: eat};
+
+// var cat2, cat3 ,...
+</pre>
+<p>不方便创建多个实例对象，扩展性差, 实例(cat1, cat2)之间找不到联系。...</p>
+</div>
+
+---
+
+title: Javascript 面向对象
+article_class: smaller
+subtitle: 对象封装 - 构造函数模式
+
+"构造函数"，就是一个普通函数，但是内部使用了 `this` 变量。对函数使用
+`new` 运算符，就能生成实例，并且 `this` 变量会绑定在实例对象上。
+
+使用构造器创建出来的对象会有一个 `constructor` 属性，指向它们的构造函数。
+`Class` 只是一个模板，创建出来的来实例都是由模板生成。
+
+<div class="build">
+<p>比如，猫的原型对象现在可以这样写: </p>
+<pre class="prettyprint" data-lang="javascript">
+function Cat(name,color){
+　　this.name = name;
+　　this.color = color;
+    this.eat = function() { console.log('eat fish'); };
+}
+
+var cat1 = new Cat('Kitty', 'black');
+console.log(cat1.name); // Kitty
+console.log(cat1 instanceof Cat); // TRUE
+// 这时 cat1 实例会自动含有一个 `constructor` 属性，指向它们的构造函数 `Cat`。
+
+var cat2 = Cat('Smokey', 'white');
+console.log(cat2); // undefined
+</pre>
+</div>
+
+---
+
+title: Javascript 面向对象
+article_class: smaller
+subtitle: 对象封装 - Prototype 模式
+
+`prototype` 是 `Function` 对象的一个属性，这个属性指向另一个对象。 这个对象的所有属性和方法，都会被构造函数的实例继承。
+同时 `prototype` 又存在一个指向构造函数的引用 `constructor`，这样就成功的构成一个循环引用的原型链结构。
+
+我们可以把那些不变的属性和方法，直接定义在 `prototype` 对象上, 节省内存开销。
+<div class="build">
+<pre class="prettyprint" data-lang="javascript">
+function Cat(name, color) {
+    this.name = name;
+    this.color = color;
+}
+Cat.prototype.type = 'mammal';
+Cat.prototype.eat = function() { console.log('eat fish'); };
+</pre>
+<pre class="prettyprint" data-lang="javascript">
+var cat1 = new Cat('Kitty', 'white');
+var cat2 = new Cat('Smokey', 'black');
+console.log(cat1.type); // mammal
+console.log(cat1.eta === cat2.eta);     // TRUE, same reference
+console.log(cat1.constructor === Cat)   // TRUE, from Person.prototype
+</pre>
+</div>
+
+---
+
+title: Javascript 面向对象
+
+继承 (Inheritance)
+
+将持有共性特点的属性或行为抽象出一个基本类, 可以按不同层次结构的业务分组抽象出多个基础类。
+
+Cat, Bird
+
+<div class="build">
+<img src="images/oop/oop_inherit.png">
+</div>
+
+---
+
+title: Javascript 面向对象
+class: nobackground
+article_class: smaller
+subtitle: 继承 - 构造函数绑定
+
+使用call或apply方法，将父对象的构造函数绑定在子对象上。
+
+<div class="build">
+<pre class="prettyprint" data-lang="javascript">
+function Animal() {
+    this.species = 'animal';
+    this.sleep = function() { console.log('I\'m sleep at night'); };
+}
+</pre>
+<pre class="prettyprint" data-lang="javascript">
+function Cat(name, color) {
+    this.name = name;
+    this.color = color;
+}
+</pre>
+<p>让`Cat` 继承 `Animal` 的特性: </p>
+<pre class="prettyprint" data-lang="javascript">
+/** @class Cat */
+function Cat(name, color) {
+    Animal.apply(this);
+    this.name = name;
+    this.color = color;
+}
+var cat1 = new Cat('Kitty', 'white');
+cat1.sleep(); // I am sleep at night
+</div>
+
+---
+
+title: Javascript 面向对象
+subtitle: 继承 - 原型链继承
+class: nobackground
+article_class: smaller
+
+如果"猫"的prototype对象，指向一个Animal的实例，那么所有"猫"的实例，就能继承Animal了。
+
+<div class="build">
+<pre class="prettyprint" data-lang="javascript">
+/** @class Cat */
+function Cat(name, color) {
+    this.name = name;
+    this.color = color;
+}
+Cat.prototype = new Animal;
+Cat.prototype.eta = function() { console.log('fish is my delicious'); };
+</pre>
+<p>它相当于完全删除了prototype 对象原先的值，然后赋予一个新值</p>
+<pre class="prettyprint" data-lang="javascript">
+// 任何一个prototype对象都有一个constructor属性，指向它的构造函数
+Cat.prototype.constructor = Cat; // fix prototype chains
+</pre>
+<pre class="prettyprint" data-lang="javascript">
+var cat = new Cat('Kitty', 'fish');
+cat.eat();      // fish is my delicious
+cat.sleep();    // I'm sleep at night'
+console.log(cat instanceof Cat);    // TRUE
+console.log(cat instanceof Animal); // TRUE
+</pre>
+<p>需要创建父类实列来实现 `prototype` 继承</p>
+</div>
+
+---
+
+title: Javascript 面向对象
+article_class: smaller
+
+继承 (Inheritance) - 利用空对象作为中介实现原型继承
+
+<pre class="prettyprint" data-lang="javascript">
+var F = function() {};
+F.prototype = Animal.prototype;
+Cat.prototype = new F();
+Cat.prototype.constructor = Cat;
+</pre>
+
+<div class="build">
+<p>我们将上面的方法，封装成一个函数，便于使用。</p>
+<pre class="prettyprint" data-lang="javascript">
+function extend(ctor, superctor, px) {
+    if (!superctor || !ctor) throw Error('extend failed, verify dependencies');
+    var F = function() {};
+    F.prototype = superctor.prototype;
+    ctor.prototype = new F();
+    ctor.prototype.constructor = ctor;
+    ctor.superclass = superctor.prototype; // cache super class proto reference.
+    if (px) { // extend class implements
+        for (var k in px) {
+            if (px.hasOwnProperty(k)) ctor.prototype[k] = px[k];
+        }
+    }
+    return ctor;
+}
+</pre>
+</div>
+
+---
+
+title: Javascript 面向对象
+article_class: smaller
+subtitle: 继承 - 借住工具方法实现继承
+
+<pre class="prettyprint" data-lang="javascript">
+/** @class Mammal */
+extend(Cat, Animal, {
+    eat: function() {
+        Cat.superclass.eat.call(this); // call super method
+        console.log('Also i like some ofther food, such as beef and more.');
+    }
+});
+
+var cat = new Cat('Smokey', 'fish');
+cat.sleep();
+cat.eat();
+console.log(cat instanceof Animal);
+console.log(cat instanceof Cat);
+</pre>
+
+---
+
+title: Javascript 面向对象
+article_class: smaller
+subtitle: 多态 - 通过重写原型方法来实现方法重名调用
+
+<pre class="prettyprint" data-lang="javascript">
+/** @class Cat */
+extend(Cat, Animal, {
+    eat: function() {
+        Cat.superclass.eat.call(this); // call super method
+        console.log('Also i like some ofther food, such as beef and more.');
+    }
+});
+</pre>
+
+---
+
+title: Javascript 面向对象
+
+多态 (Polymorphism) - 原型继承 `prototype` 链上的方法、属性查找
+
+<img src="images/oop/prototype.png">
+
+---
+
+title: Summary
+
+Constructor
+Prototype
+Inheritance
+
+---
+
+class: nobackground fill
+
+Thanks
