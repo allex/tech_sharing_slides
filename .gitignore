@@ -1,0 +1,11 @@
+build_tmp*/
+build_rollup_tmp*/
+.DS_Store
+.*.swp
+.svn
+CVS/
+*~
+.git
+ref
+.sass-cache/
+.session.vim
