@@ -84,7 +84,7 @@ var Cat = {
 <p>现在，我们需要根据这个原型对象的规格（schema），生成两个实例对象。</p>
 <pre class="prettyprint" data-lang="javascript">
 function eat() {
-    console.log('I\'m eta fish');
+    console.log('I\'m eat fish');
 }
 var cat1 = {name: 'Kitty', color: 'white', eat: eat};
 var cat1 = {name: 'Smokey', color: 'black', eat: eat};
@@ -109,9 +109,9 @@ subtitle: 对象封装 - 构造函数模式
 <div class="build">
 <p>比如，猫的原型对象现在可以这样写: </p>
 <pre class="prettyprint" data-lang="javascript">
-function Cat(name,color){
-　　this.name = name;
-　　this.color = color;
+function Cat(name, color) {
+    this.name = name;
+    this.color = color;
     this.eat = function() { console.log('eat fish'); };
 }
 
@@ -148,7 +148,7 @@ Cat.prototype.eat = function() { console.log('eat fish'); };
 var cat1 = new Cat('Kitty', 'white');
 var cat2 = new Cat('Smokey', 'black');
 console.log(cat1.type); // mammal
-console.log(cat1.eta === cat2.eta);     // TRUE, same reference
+console.log(cat1.eat === cat2.eat);     // TRUE, same reference
 console.log(cat1.constructor === Cat)   // TRUE, from Person.prototype
 </pre>
 </div>
@@ -218,7 +218,7 @@ function Cat(name, color) {
     this.color = color;
 }
 Cat.prototype = new Animal;
-Cat.prototype.eta = function() { console.log('fish is my delicious'); };
+Cat.prototype.eat = function() { console.log('fish is my delicious'); };
 </pre>
 <p>它相当于完全删除了prototype 对象原先的值，然后赋予一个新值</p>
 <pre class="prettyprint" data-lang="javascript">
@@ -226,7 +226,7 @@ Cat.prototype.eta = function() { console.log('fish is my delicious'); };
 Cat.prototype.constructor = Cat; // fix prototype chains
 </pre>
 <pre class="prettyprint" data-lang="javascript">
-var cat = new Cat('Kitty', 'fish');
+var cat = new Cat('Kitty', 'white');
 cat.sleep();    // I'm sleep at night'
 console.log(cat instanceof Cat);    // TRUE
 console.log(cat instanceof Animal); // TRUE
@@ -283,7 +283,7 @@ extend(Cat, Animal, {
     }
 });
 
-var cat = new Cat('Smokey', 'fish');
+var cat = new Cat('Smokey', 'white');
 cat.sleep();
 cat.eat();
 console.log(cat instanceof Animal);
